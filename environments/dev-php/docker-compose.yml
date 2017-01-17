@@ -1,0 +1,30 @@
+version: '2'
+services:
+
+  sql-testing:
+    image : mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=php_test
+      - MYSQL_USER=php_test
+      - MYSQL_PASSWORD=php_test
+    container_name: sql-testing
+
+
+  php7:
+    image: php7
+    build: ./php7
+    container_name: php7
+    ports:
+      - "80:80"
+#      - "9000:9000"
+      - "8000:8000"
+#      - "8448:8448"
+    environment:
+      XDEBUG_CONFIG: "remote_host=172.19.0.1 idekey=PHPSTORM remote_enable=1 remote_connect_back=1"
+    volumes:
+      - /home/jrojo/Projects/ClubTenisPadel:/var/www/ClubTenisPadel
+    depends_on:
+      - sql-testing

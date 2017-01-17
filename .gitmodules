@@ -1,9 +1,9 @@
 [submodule "ClubTenisPadelServer"]
 	path = ClubTenisPadelServer
-	url = https://github.com/jeromo/ClubTenisPadelServer.git
+	url = git@github.com:jeromo/ClubTenisPadelServer
 [submodule "ClubTenisPadelAndroid"]
 	path = ClubTenisPadelAndroid
-	url = https://github.com/jeromo/ClubTenisPadelAndroid.git
+	url = git@github.com:jeromo/ClubTenisPadelAndroid.
 [submodule "ClubTenisPadelQt"]
 	path = ClubTenisPadelQt
-	url = https://github.com/jeromo/ClubTenisPadelQt.git
+	url = git@github.com:jeromo/ClubTenisPadelQt
