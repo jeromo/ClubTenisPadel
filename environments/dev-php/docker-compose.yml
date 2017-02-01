@@ -25,6 +25,6 @@ services:
     environment:
       XDEBUG_CONFIG: "remote_host=172.19.0.1 idekey=PHPSTORM remote_enable=1 remote_connect_back=1"
     volumes:
-      - /home/jrojo/Projects/ClubTenisPadel:/var/www/ClubTenisPadel
+      - /home/jrojo/Projects:/var/www/Projects
     depends_on:
       - sql-testing

@@ -1,0 +1,107 @@
+FROM  ubuntu:latest
+
+RUN   apt update  -yqq                &&  \
+      apt install -y build-essential      \
+            libfontconfig1                \
+            libsdl2-dev                   \
+            wget                          \
+            curl                          \
+            openssh-server                \
+            git                           \
+            ccache                        \
+            perl                          \
+            python                    &&  \
+     apt -y build-dep qtbase5-dev     &&  \
+     apt -y install --no-install-recommends \
+         "^libxcb.*"                      \
+         libx11-xcb-dev                   \
+         libglu1-mesa-dev                 \
+         libxrender-dev                   \
+         libxi-dev                        \
+         "libatspi2*"                     \
+         libdbus-1-dev                    \
+         flex                                       \
+         bison                                      \
+         gperf                                      \
+         libicu-dev                                 \
+         libxslt-dev                                \
+         ruby                                       \
+         libssl-dev                                 \
+         libxcursor-dev                             \
+         libxcomposite-dev                          \
+         libxdamage-dev                             \
+         libxrandr-dev                              \
+         libfontconfig1-dev                         \
+         libcap-dev                                 \
+         libbz2-dev                                 \
+         libgcrypt11-dev                            \
+         libpci-dev                                 \
+         libnss3-dev                                \
+         libxcursor-dev                             \
+         libxcomposite-dev                          \
+         libxdamage-dev                             \
+         libxrandr-dev                              \
+         libdrm-dev                                 \
+         libfontconfig1-dev                         \
+         libxtst-dev                                \
+         libasound2-dev                             \
+         libcups2-dev                               \
+         libpulse-dev                               \
+         libudev-dev                                \
+         libssl-dev                                 \
+         libasound2-dev                             \
+         libgstreamer0.10-dev                       \
+         cmake                                      \
+         libboost-all-dev                           \
+         libgstreamer-plugins-base0.10-dev
+
+RUN      sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd && \
+         mkdir -p /var/run/sshd                  && \
+        useradd -m jenkins                       && \
+        echo "jenkins:jenkins" | chpasswd        &&\
+         cd /tmp                                 && \
+         curl -o install.sh https://raw.githubusercontent.com/SpectoLabs/hoverfly/master/install.sh && \
+         bash install.sh                         && \
+         git clone git://code.qt.io/qt/qt5.git      \
+            --branch 5.7.1 &&                       \
+         cd qt5 &&                                  \
+         git checkout 5.7.1                      && \
+         ./init-repository                       && \
+         cd /tmp/qt5 &&                             \
+        ./configure                                 \
+           -prefix /usr/local                       \
+           -opensource                              \
+           -confirm-license                         \
+           -nomake tests                            \
+           -nomake examples                         \
+           -dbus                                    \
+           -no-separate-debug-info                  \
+           -xcb                                     \
+           -system-xcb                              \
+           -qpa xcb                                 \
+           -release                                 \
+           -force-debug-info                        \
+           -reduce-relocations                      \
+           -optimized-qmake                      && \
+           cd /tmp/qt5 && make -j               && \
+           cd /tmp/qt5 && make install
+
+RUN  gem install cucumber                       && \
+    cd /tmp                                     && \
+     git clone https://github.com/cucumber/cucumber-cpp.git && \
+     cd cucumber-cpp                              && \
+     git submodule init                          && \
+     git submodule update                        && \
+     cmake -E make_directory build               && \
+     cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on .. && \
+     cmake --build build
+
+# Run unit tests
+#cmake --build build --target test
+
+# Check implementation against common cucumber test suite
+#cmake --build build --target features
+
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]

@@ -1,0 +1,30 @@
+version: '2'
+services:
+  mysql:
+    image : mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlpassword
+      - MYSQL_DATABASE=sonar
+      - MYSQL_USER=sonar
+      - MYSQL_PASSWORD=sonar
+    container_name: mysql
+    volumes:
+      - /home/jrojo/data/mysqldata/:/var/lib/mysql
+
+  sonarqube:
+    image: sonarqube:5.6.1
+    ports:
+      - "9000:9000"
+      - "9002:9002"
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+    volumes:
+      - /home/jrojo/data/sonarqube/:/intercanbio
+    container_name: sonarqube
+    depends_on:
+      - mysql
+

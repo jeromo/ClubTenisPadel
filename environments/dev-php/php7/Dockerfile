@@ -11,6 +11,8 @@ RUN apt update -yqq                    && \
                    php-mysql              \
                    php-mbstring           \
                    php-intl               \
+                   php-sqlite3            \
+                   php-curl               \
                    supervisor             \
                    git                    \
                    zip                    \
@@ -24,10 +26,14 @@ RUN wget https://phar.phpunit.de/phpunit.phar && \
 
 ADD ./start.sh /start.sh
 RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor && \
-    mkdir -p /etc/supervisor/conf.d
+    mkdir -p /etc/supervisor/conf.d                                               && \
+    echo "date.timezone=Europe/Madrid" >> /etc/php/7.0/apache2/php.ini            && \
+    echo "date.timezone=Europe/Madrid" >> /etc/php/7.0/cli/php.ini
 ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD apache-default.conf /etc/apache2/sites-available/000-default.conf
 ADD club.dev.conf /etc/apache2/sites-available/club.dev.conf
+ADD rest.dev.conf /etc/apache2/sites-available/rest.dev.conf
+ADD fos-rest.dev.conf /etc/apache2/sites-available/fos-rest.dev.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2enmod rewrite                                          && \
@@ -36,6 +42,8 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2enmod env                                              && \
     a2enmod expires                                          && \
     a2ensite club.dev                                        && \
+    a2ensite rest.dev                                        && \
+    a2ensite fos-rest.dev                                    && \
     useradd -u 1000 -m jrojo                                 && \
     useradd jenkins                                          && \
     echo "jenkins:jenkins" | chpasswd
