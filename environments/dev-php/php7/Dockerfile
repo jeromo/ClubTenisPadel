@@ -13,6 +13,7 @@ RUN apt update -yqq                    && \
                    php-intl               \
                    php-sqlite3            \
                    php-curl               \
+                   php-gd                 \
                    supervisor             \
                    git                    \
                    zip                    \
@@ -32,8 +33,6 @@ RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/superviso
 ADD ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD apache-default.conf /etc/apache2/sites-available/000-default.conf
 ADD club.dev.conf /etc/apache2/sites-available/club.dev.conf
-ADD rest.dev.conf /etc/apache2/sites-available/rest.dev.conf
-ADD fos-rest.dev.conf /etc/apache2/sites-available/fos-rest.dev.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2enmod rewrite                                          && \
@@ -42,8 +41,6 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2enmod env                                              && \
     a2enmod expires                                          && \
     a2ensite club.dev                                        && \
-    a2ensite rest.dev                                        && \
-    a2ensite fos-rest.dev                                    && \
     useradd -u 1000 -m jrojo                                 && \
     useradd jenkins                                          && \
     echo "jenkins:jenkins" | chpasswd

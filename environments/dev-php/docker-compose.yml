@@ -19,11 +19,13 @@ services:
     container_name: php7
     ports:
       - "80:80"
+#      - "12000:80"
 #      - "9000:9000"
       - "8000:8000"
+      - "3600:3600"
 #      - "8448:8448"
     environment:
-      XDEBUG_CONFIG: "remote_host=172.19.0.1 idekey=PHPSTORM remote_enable=1 remote_connect_back=1"
+      XDEBUG_CONFIG: "remote_host=172.18.0.1 idekey=PHPSTORM remote_enable=1 remote_connect_back=1"
     volumes:
       - /home/jrojo/Projects:/var/www/Projects
     depends_on:
