@@ -1,6 +1,9 @@
 [submodule "ClubTenisPadelAndroid"]
 	path = ClubTenisPadelAndroid
 	url = git@github.com:jeromo/ClubTenisPadelAndroid
+[submodule "ClubTenisPadelServer"]
+	path = ClubTenisPadelServer
+	url = git@github.com:jeromo/ClubTenisPadelServer
 [submodule "ClubTenisPadelQt"]
 	path = ClubTenisPadelQt
 	url = git@github.com:jeromo/ClubTenisPadelQt
